@@ -8,17 +8,17 @@ namespace Main.AgentsController.Commands
     /// </summary>
     public class ShootCommand : BaseCommand
     {
-        protected override string name { get; set; }
-        private Action player;
+        private string _name { get; set; }
+        private Action _player;
         public ShootCommand(string name, Action action)
         {
-            this.name = name;
-            this.player = action;
+            this._name = name;
+            this._player = action;
         }
         public override void Execute()
         {
-            Debug.Log($"Using {this.name} command");
-            player.Invoke();
+            Debug.Log($"Using {this._name} command");
+            _player.Invoke();
         }
     }
 }

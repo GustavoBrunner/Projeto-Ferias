@@ -1,3 +1,4 @@
+using Main.AgentsController.Observable;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,6 +12,8 @@ namespace Main
         [RequireComponent(typeof(Collider))]
         public abstract class BaseController : MonoBehaviour
         {
+            
+
             protected Rigidbody rb;
             protected Transform tf;
             private void Awake()

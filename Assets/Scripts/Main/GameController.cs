@@ -6,12 +6,12 @@ namespace Main
 {
     public class GameController : MonoBehaviour
     {
-        private Dictionary<string, GameObject> prefabs = new Dictionary<string, GameObject>();
+        private Dictionary<string, GameObject> _prefabs = new Dictionary<string, GameObject>();
 
         private void Awake()
         {
-            prefabs.Add("Player", Resources.Load<GameObject>("Prefabs/Player"));
-            Instantiate(prefabs["Player"], Vector3.zero, Quaternion.identity);
+            _prefabs.Add("Player", Resources.Load<GameObject>("Prefabs/Player"));
+            Instantiate(_prefabs["Player"], Vector3.zero, Quaternion.identity);
         }
 
         void Update()
