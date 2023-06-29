@@ -35,7 +35,7 @@ namespace Main
         }
         private void Update()
         {
-            if(Input.GetKeyDown(KeyCode.Space))
+            if(Input.GetKeyDown(KeyCode.Mouse0))
                 _commandController.Shoot();
             if (Input.GetKeyDown(KeyCode.E))
                 _commandController.Interact();

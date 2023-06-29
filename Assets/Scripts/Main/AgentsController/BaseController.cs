@@ -11,11 +11,17 @@ namespace Main
         [RequireComponent(typeof(Collider))]
         public abstract class BaseController : MonoBehaviour
         {
-            protected List<IObserver> observers = new List<IObserver>();
+            [SerializeField]
+            
+            //protected List<IObserver> observers = new List<IObserver>();
 
             protected Rigidbody rb;
             protected Transform tf;
             private void Awake()
+            {
+                
+            }
+            private void Start()
             {
                 rb = GetComponent<Rigidbody>();
                 tf = GetComponent<Transform>();
@@ -26,6 +32,7 @@ namespace Main
             }
             protected abstract void NotifyObservers();
             public abstract void AddObserver(IObserver observer);
+            public abstract void AddObserver(IObserver[] observer);
             public abstract void RemoveObserver(IObserver observer);
         }
     }

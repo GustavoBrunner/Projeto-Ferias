@@ -12,6 +12,11 @@ namespace Main.AgentsController
             throw new System.NotImplementedException();
         }
 
+        public override void AddObserver(IObserver[] observer)
+        {
+            throw new System.NotImplementedException();
+        }
+
         public override void RemoveObserver(IObserver observer)
         {
             throw new System.NotImplementedException();

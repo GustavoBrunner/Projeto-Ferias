@@ -8,27 +8,23 @@ namespace Main
 {
     public class HudController : MonoBehaviour, IObserver
     {
-        PlayerController playerController;
-        float damage;
+        float _damage;
+        ObservableHandler oHandler; //ObservableHandler instance
         private void Awake()
         {
-            playerController = new PlayerController();
             
         }
         private void Start()
         {
-            playerController.AddObserver(this);
+            oHandler = new ObservableHandler(PlayerController.Instance, this);
         }
         public void OnNotify<T>(NotificationType type, T value)
         {
-            Debug.Log("Tentando notificar");
             if (type == NotificationType.Damage)
-                if (value.Equals(typeof(float)))
-                {
-                    damage = float.Parse("value");
-                    Debug.Log(damage);
-                }
-            
+            {
+                _damage = float.Parse(value.ToString());
+                Debug.Log(_damage);
+            }
         }
     }
 }

@@ -4,14 +4,16 @@ using UnityEngine;
 using System;
 using Main.AgentsController.Commands;
 using Main.AgentsController.Observable;
+
 namespace Main
 {
     namespace AgentsController
     {
         public class PlayerController : BaseController
         {
+            [SerializeField]
+            public List<IObserver> observers = new List<IObserver>();
 
-            
             public static PlayerController Instance { get; private set; }
             private void Awake()
             {
@@ -40,19 +42,23 @@ namespace Main
 
             protected override void NotifyObservers()
             {
-                foreach (var observer in this.observers)
-                {
-                    observer.OnNotify(NotificationType.Damage, 20f);
+                    Debug.Log("Teste");
+                this.observers[0].OnNotify(NotificationType.Damage, 20f);
                     //Não está entrando no loop, esse é o problema que tá dando.
-                }
+                
             }
 
             public override void AddObserver(IObserver observer)
             {
                 this.observers.Add(observer);
                 Debug.Log(this.observers.Count);
+                
             }
 
+            public override void AddObserver(IObserver[] observer)
+            {
+                this.observers.AddRange(observer);
+            }
             public override void RemoveObserver(IObserver observer)
             {
                 throw new NotImplementedException();
@@ -66,7 +72,7 @@ namespace Main
             {
                 NotifyObservers();
             }
-            
+
         }
     }
 }
