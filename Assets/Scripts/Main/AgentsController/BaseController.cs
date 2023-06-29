@@ -1,9 +1,8 @@
-using Main.AgentsController.Observable;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
+using Main.AgentsController.Observable;
 namespace Main
 {
     namespace AgentsController
@@ -12,7 +11,7 @@ namespace Main
         [RequireComponent(typeof(Collider))]
         public abstract class BaseController : MonoBehaviour
         {
-            
+            protected List<IObserver> observers = new List<IObserver>();
 
             protected Rigidbody rb;
             protected Transform tf;
@@ -25,6 +24,9 @@ namespace Main
             {
 
             }
+            protected abstract void NotifyObservers();
+            public abstract void AddObserver(IObserver observer);
+            public abstract void RemoveObserver(IObserver observer);
         }
     }
 }
