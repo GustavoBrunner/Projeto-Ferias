@@ -1,3 +1,4 @@
+using UnityEngine;
 namespace Main.AgentsController.Commands
 {
     /// <summary>
@@ -6,23 +7,22 @@ namespace Main.AgentsController.Commands
     /// </summary>
     /// 
     
-    public class CommandController 
+    public class CommandController : MonoBehaviour
     {
         
         BaseCommand _shootCommand;
         BaseCommand _runCommand;
         BaseCommand _jumpCommand;
         BaseCommand _interactCommand;
-    
-        public CommandController(BaseCommand shootCommand, BaseCommand runCommand, BaseCommand jumpCommand, BaseCommand interactCommand)
+        BaseCommand _stopRun;
+        public CommandController(BaseCommand shootCommand, BaseCommand runCommand, BaseCommand jumpCommand, BaseCommand interactCommand, BaseCommand stopRun)
         {
             this._shootCommand = shootCommand;
             this._runCommand = runCommand;
             this._jumpCommand = jumpCommand;
             this._interactCommand = interactCommand;
+            this._stopRun = stopRun;
         }
-        
-
         public void Shoot()
         {
             //Comando que fará o player atirar
@@ -42,6 +42,10 @@ namespace Main.AgentsController.Commands
         {
             //Comando que fará o player interagir com um objeto.
             _interactCommand.Execute();
+        }
+        public void StopRun()
+        {
+            _stopRun.Execute();
         }
     }
 }

@@ -10,14 +10,20 @@ namespace Main.AgentsController.Commands {
     {
         private string _name;
         private Action _action;
-        public RunCommand(string name, Action action)
+        private Action _action1;
+        public RunCommand(string name, Action action, Action action1)
         {
             this._name = name;
             this._action = action;
+            this._action1 = action1;
         }
         public override void Execute()
         {
             this._action.Invoke();
+        }
+        public void StopExecute()
+        {
+            this._action1.Invoke();
         }
     }
 }

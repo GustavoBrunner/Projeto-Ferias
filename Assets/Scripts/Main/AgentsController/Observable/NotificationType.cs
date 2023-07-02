@@ -7,6 +7,9 @@ namespace Main.AgentsController.Observable
     public enum NotificationType
     {
         none, 
-        Damage,
+        damage,
+        positionChange,
+        stamina,
+        gamePhase,
     }
 }

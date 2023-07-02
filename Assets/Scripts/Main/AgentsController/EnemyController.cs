@@ -5,8 +5,13 @@ using Main.AgentsController.Observable;
 
 namespace Main.AgentsController
 {
-    public class EnemyController : BaseController
+    public class EnemyController : BaseController, IObserver
     {
+        protected override void Start()
+        {
+            base.Start();
+            gameObject.tag = "Enemy";
+        }
         public override void AddObserver(IObserver observer)
         {
             throw new System.NotImplementedException();
@@ -22,7 +27,7 @@ namespace Main.AgentsController
             throw new System.NotImplementedException();
         }
 
-        protected override void NotifyObservers()
+        protected override void NotifyObservers<T>(NotificationType type, T value)
         {
             throw new System.NotImplementedException();
         }
@@ -32,6 +37,14 @@ namespace Main.AgentsController
         }
         private void Update()
         {
+        }
+
+        public void OnNotify<T>(NotificationType type, T value)
+        {
+            if(type == NotificationType.positionChange)
+            {
+                Debug.Log($"Player changing his position, current in {value}");
+            }
         }
     }
 }
