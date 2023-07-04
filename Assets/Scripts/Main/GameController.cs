@@ -16,22 +16,22 @@ namespace Main
     {
         public static GameController Instance { get; private set; }
 
-        private Dictionary<string, GameObject> _prefabs = new Dictionary<string, GameObject>();
-        ObservableHandler _oHandler;
+        private Dictionary<string, GameObject> prefabs = new Dictionary<string, GameObject>();
+        ObservableHandler oHandler;
         List<EnemyController> enemyControllers = new List<EnemyController>();
-        Camera _camera;
-        HudController _hudController;
-        GameObject _blockParent;
-        WorldCreationDTO _worldDTO;
+        Camera camera;
+        HudController hudController;
+        GameObject blockParent;
+        WorldCreationDTO worldDTO;
         public bool isInTestPeriod { get; private set; }
-        private PrimitiveFactory _primitives;
-        private FSMPhases _phaseControl;
+        private PrimitiveFactory primitives;
+        private FSMPhases phaseControl;
         private void Awake()
         {
             isInTestPeriod = true;
-            _primitives = new PrimitiveFactory();
-            _prefabs.Add("Player", Resources.Load<GameObject>("Prefabs/Player"));
-            _prefabs.Add("Enemie1", Resources.Load<GameObject>("Prefabs/Enemie"));
+            primitives = new PrimitiveFactory();
+            prefabs.Add("Player", Resources.Load<GameObject>("Prefabs/Player"));
+            prefabs.Add("Enemie1", Resources.Load<GameObject>("Prefabs/Enemie"));
             gameObject.AddComponent<FSMPhases>();
             CreateSingleton();
             GetReferences();
@@ -40,46 +40,58 @@ namespace Main
         }
         private void Start()
         {
-            NoTestCreateWorld();
+            if (!isInTestPeriod)
+                TurnFSMon(GamePhases.first);
         }
         void Update()
         {
-            if(Input.GetKeyDown(KeyCode.F1))
+            //se estiver em período de testes, essas teclas poderão ser usadas para alterar as cenas, para futuros testes
+            if (isInTestPeriod)
             {
-                TurnFSMon(GamePhases.first);
+                if(Input.GetKeyDown(KeyCode.F1))
+                {
+                    TurnFSMon(GamePhases.first);
                 
-                Debug.Log("Criando mundo");
-            }
-            if(Input.GetKeyDown(KeyCode.Keypad1))
-            {
-                SceneManager.LoadScene("FirstPhase");
-                _worldDTO = UpdateDTO(GamePhases.first);
-            }
-            if(Input.GetKeyDown(KeyCode.Keypad2))
-            {
-                _worldDTO = UpdateDTO(GamePhases.second);
+                    Debug.Log("Criando mundo");
+                }
+                if(Input.GetKeyDown(KeyCode.Keypad1))
+                {
+                    SceneManager.LoadScene("SecondPhase");
+                    TurnFSMon(GamePhases.second);
+                }
+                if(Input.GetKeyDown(KeyCode.Keypad2))
+                {
+                    worldDTO = UpdateDTO(GamePhases.second);
+                }
+                if(Input.GetKeyDown(KeyCode.Alpha1))
+                {
+                    LoadScene(GamePhases.first);
+                }
             }
         }
+        //cria os inimigos, e já adiciona eles aos observadores do player
         private void CreateEnemies()
         {
-            var inimigo = Instantiate(_prefabs["Enemie1"], Vector3.zero, Quaternion.identity);
+            var inimigo = Instantiate(prefabs["Enemie1"], Vector3.zero, Quaternion.identity);
             enemyControllers.Add(inimigo.GetComponent<EnemyController>());
             Debug.Log(enemyControllers.Count);
-            _oHandler.AddObservers(inimigo.GetComponent<IObserver>());
+            oHandler.AddObservers(inimigo.GetComponent<IObserver>());
         }
+        //pega a posição do mapa em relação à tela para o mundo
         public Ray GetMousePos()
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             return ray;
         }
+        //Pega todas as referências necessárias para o jogo acontecer normalmente
         private void GetReferences()
         {
             try
             {
-                _blockParent = GameObject.FindGameObjectWithTag("BlockParent");
-                _phaseControl = FindAnyObjectByType<FSMPhases>();
-                _hudController = FindAnyObjectByType<HudController>();
-                _worldDTO = Resources.Load<WorldCreationDTO>("DTOs/WorldCreationDTO");
+                blockParent = GameObject.FindGameObjectWithTag("BlockParent");
+                phaseControl = FindAnyObjectByType<FSMPhases>();
+                hudController = FindAnyObjectByType<HudController>();
+                worldDTO = Resources.Load<WorldCreationDTO>("DTOs/WorldCreationDTO");
             }
             catch (Exception e)
             {
@@ -89,8 +101,8 @@ namespace Main
         //Create the base of the game based on the actual game phase. Testing purpose.
         public void ChangeCreationOnPhase(GamePhases phase)
         {
-            if(isInTestPeriod)
-            {
+            //if(isInTestPeriod)
+            //{
                 switch(phase)
                 {
                     case GamePhases.none:
@@ -98,11 +110,12 @@ namespace Main
                         break;
                     case GamePhases.first:
                         //CreateBaseWorld();
-                        
+                        Debug.Log("Creating first phase");
+                        worldDTO = UpdateDTO(GamePhases.first);
                         CreatePlayer();
+                        PlayerController.Instance.FirstPhasePlayer(worldDTO);
                         HudController.Instance.GetData();
                         InputController.Instance.StartCommands();
-                        PlayerController.Instance.FirstPhasePlayer(_worldDTO);
                         break;
                     case GamePhases.second:
 
@@ -114,8 +127,9 @@ namespace Main
                     default:
                         break;
                 }
-            }
+            //}
         }
+        //cria o singleton do game controller
         private void CreateSingleton()
         {
             if (Instance == null)
@@ -131,23 +145,23 @@ namespace Main
         //Create the terrain
         void CreateBaseWorld()
         {
-            var floor = _primitives.CreateCube(_worldDTO.PlatformSize, _blockParent.transform);
+            var floor = primitives.CreateCube(worldDTO.PlatformSize, blockParent.transform);
             floor.name = "Floor";
         }
         //Create the blocking of the first phase
         //Later can be replaces with a scene
         void CreatePlayer()
         {
-            Instantiate(_prefabs["Player"], Vector3.zero, Quaternion.identity);
-            _oHandler = new ObservableHandler(PlayerController.Instance, HudController.Instance);
-            _oHandler.AddObservers(this);
+            Instantiate(prefabs["Player"], worldDTO.Position, Quaternion.identity);
+            oHandler = new ObservableHandler(PlayerController.Instance, HudController.Instance);
+            oHandler.AddObservers(this);
         }
         //Create Phases
         void CreatePhases()
         {
             IPhase phase;
-            phase = new FirstPhase(_phaseControl.ChangePhase);
-            _phaseControl.AddPhases(phase);
+            phase = new FirstPhase(phaseControl.ChangePhase);
+            phaseControl.AddPhases(phase);
         }
         //Observers notification
         public void OnNotify<T>(NotificationType type, T value)
@@ -157,7 +171,7 @@ namespace Main
         //Turn the finit state machine on
         void TurnFSMon(GamePhases phase)
         {
-            _phaseControl.StartFSM(phase);
+            phaseControl.StartFSM(phase);
         }
         //Update the DTO based on the Game Phase, the data will be used to create the world
         private WorldCreationDTO UpdateDTO(GamePhases phase)
@@ -168,20 +182,22 @@ namespace Main
                     Debug.Break();
                     break;
                 case GamePhases.first:
-                    _worldDTO.Hp = 0f;
-                    _worldDTO.name = "Ciclaninho";
-                    _worldDTO.Stamina = 20f;
-                    _worldDTO.Position = new Vector3(0, 1, 0);
-                    _worldDTO.Speed = 10f;
-                    Debug.Log($"DTO atualizado: {_worldDTO.Hp.ToString()}, {_worldDTO.Position.ToString()}, {_worldDTO.Stamina.ToString()}, {_worldDTO.Speed.ToString()}, {_worldDTO.name}");
+                    worldDTO.Hp = 0f;
+                    worldDTO.name = "Ciclaninho";
+                    worldDTO.Stamina = 10f;
+                    worldDTO.Position = new Vector3(0, 1, 0);
+                    worldDTO.Speed = 10f;
+                    worldDTO.AimSpeed = 3f;
+                    Debug.Log($"DTO atualizado: {worldDTO.Hp.ToString()}, {worldDTO.Position.ToString()}, {worldDTO.Stamina.ToString()}, {worldDTO.Speed.ToString()}, {worldDTO.name}");
                     break;
                 case GamePhases.second:
-                    _worldDTO.Hp = 10f;
-                    _worldDTO.name = "Fulaninho";
-                    _worldDTO.Stamina = 100f;
-                    _worldDTO.Position = new Vector3(10, 1, 0);
-                    _worldDTO.Speed = 5f;
-                    Debug.Log($"DTO atualizado: {_worldDTO.Hp.ToString()}, {_worldDTO.Position.ToString()}, {_worldDTO.Stamina.ToString()}, {_worldDTO.Speed.ToString()}, {_worldDTO.name}");
+                    worldDTO.Hp = 10f;
+                    worldDTO.name = "Fulaninho";
+                    worldDTO.Stamina = 20f;
+                    worldDTO.Position = new Vector3(10, 1, 0);
+                    worldDTO.Speed = 5f;
+                    worldDTO.AimSpeed = 5f;
+                    Debug.Log($"DTO atualizado: {worldDTO.Hp.ToString()}, {worldDTO.Position.ToString()}, {worldDTO.Stamina.ToString()}, {worldDTO.Speed.ToString()}, {worldDTO.name}");
                     break;
                 case GamePhases.third:
 
@@ -189,15 +205,25 @@ namespace Main
                 default:
                     break;
             }
-            return _worldDTO;
+            return worldDTO;
         }
-        void NoTestCreateWorld()
+        void LoadScene(GamePhases phases)
         {
-            if (!isInTestPeriod)
+            switch(phases)
             {
-                SceneManager.LoadScene("FirstPhase");
-                _worldDTO = UpdateDTO(GamePhases.first);
-                TurnFSMon(GamePhases.first);
+                case GamePhases.none:
+                    break;
+                case GamePhases.first:
+                    SceneManager.LoadScene("FirstPhase");
+                    break;
+                case GamePhases.second:
+                    SceneManager.LoadScene("SecondPhase");
+                    break;
+                case GamePhases.third:
+                    SceneManager.LoadScene("ThirdPhase");
+                    break;
+                default:
+                    break;
             }
         }
     }

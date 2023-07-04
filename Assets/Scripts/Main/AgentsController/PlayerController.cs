@@ -15,15 +15,22 @@ namespace Main
             public static PlayerController Instance { get; private set; }
 
             public float Stamina { get; private set; }
-            private bool _isRunning;
-            Vector3 _mousePosition;
-            private WorldCreationDTO _firstDto;
+            private bool isRunning;
+            Vector3 mousePosition;
+            private WorldCreationDTO firstDto;
+            public const float MIN_STAMINA = 0f;
+            public const float MAX_STAMINA = 20f;
+            private float aimSpeed;
+            private bool canAim;
+            private bool isAim;
             protected override void Awake()
             {
                 CreateSingleton();
                 base.Awake();
                 //FirstPhasePlayer();
-                _firstDto = Resources.Load<WorldCreationDTO>("DTOs/PlayerDTO");
+                firstDto = Resources.Load<WorldCreationDTO>("DTOs/PlayerDTO");
+                canAim = true;
+                isAim = false;
             }
             protected override void Start()
             {
@@ -31,16 +38,17 @@ namespace Main
             }
             private void Update()
             {
-                _mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                 if (Input.GetKeyDown(KeyCode.Mouse0))
                 {
                     Move();
                 }
-                if (_isRunning && Agent.velocity.magnitude > 0)
+                SubStamina();
+                if(Input.GetKeyUp(KeyCode.Mouse1))
                 {
-                    Stamina -= Time.deltaTime;
-                    NotifyObservers(NotificationType.stamina, Stamina);
+
                 }
+                ChangePlayerRotation();
             }
             private void CreateSingleton()
             {
@@ -61,19 +69,41 @@ namespace Main
             {
                 Debug.Log("pew pew pew Player atirando");
             }
-
+            public void Aim()
+            {
+                if(canAim)
+                {
+                    Debug.Log("Player aiming");
+                    this.Agent.speed = aimSpeed;
+                    isAim = true;
+                }
+            }
             public void Run()
             {
-                _isRunning = true;
-                Debug.Log("Player Running");
-                if (Stamina > 0)
-                    Agent.speed = 10f;
-                else
-                    Agent.speed = 5f;
+                if(!isAim)
+                {
+                    isRunning = true;
+                    canAim = false;
+                    Debug.Log("Player Running");
+                    if (Stamina > MIN_STAMINA)
+                        Agent.speed = 10f;
+                }
+            }
+            private void SubStamina()
+            {
+                if (isRunning && Agent.velocity.magnitude > 0)
+                {
+                    if (Stamina > MIN_STAMINA)
+                    {
+                        Stamina -= Time.deltaTime;
+                        NotifyObservers(NotificationType.stamina, Stamina);
+                    }
+                }
             }
             public void StopRun()
             {
-                _isRunning = false;
+                isRunning = false;
+                canAim = true;
                 Agent.speed = 5f;
             }
             public void Jump()
@@ -88,7 +118,7 @@ namespace Main
             protected override void NotifyObservers<T>(NotificationType type, T value)
             {
                 Debug.Log("Notificando observadores");
-                foreach (var observer in this.observers)
+                foreach (var observer in this.Observers)
                 {
                     observer?.OnNotify(type, value);
                 }
@@ -96,14 +126,14 @@ namespace Main
 
             public override void AddObserver(IObserver observer)
             {
-                this.observers?.Add(observer);
-                Debug.Log(this.observers.Count);
+                this.Observers?.Add(observer);
+                Debug.Log(this.Observers.Count);
                 
             }
 
             public override void AddObserver(IObserver[] observer)
             {
-                this.observers?.AddRange(observer);
+                this.Observers?.AddRange(observer);
             }
             public override void RemoveObserver(IObserver observer)
             {
@@ -129,9 +159,21 @@ namespace Main
                 if (GameController.Instance.isInTestPeriod)
                 {
                     this.transform.position = dto.Position;
-                    Agent.speed = dto.Speed;
+                    this.Agent.speed = dto.Speed;
                     this.Stamina = dto.Stamina;
+                    this.aimSpeed = dto.AimSpeed;
                     Debug.Log("Criando player");
+                }
+            }
+            private void ChangePlayerRotation()
+            {
+                
+                if (isAim)
+                {
+                    
+                else
+                {
+
                 }
             }
         }

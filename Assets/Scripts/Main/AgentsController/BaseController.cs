@@ -12,7 +12,7 @@ namespace Main
         public abstract class BaseController : MonoBehaviour
         {
             [SerializeField]
-            public List<IObserver> observers = new List<IObserver>();
+            public List<IObserver> Observers = new List<IObserver>();
 
             //protected List<IObserver> observers = new List<IObserver>();
             [SerializeField]

@@ -10,6 +10,7 @@ namespace Main.DTO
         public float Speed { get; set; } = 5f;
         public float Stamina { get; set; } = 10f;
         public float Hp { get; set; } = 10f;
+        public float AimSpeed { get; set; } = 2f;
 
 
         //World Data

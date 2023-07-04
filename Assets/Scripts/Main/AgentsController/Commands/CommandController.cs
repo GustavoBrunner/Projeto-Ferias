@@ -10,42 +10,48 @@ namespace Main.AgentsController.Commands
     public class CommandController : MonoBehaviour
     {
         
-        BaseCommand _shootCommand;
-        BaseCommand _runCommand;
-        BaseCommand _jumpCommand;
-        BaseCommand _interactCommand;
-        BaseCommand _stopRun;
-        public CommandController(BaseCommand shootCommand, BaseCommand runCommand, BaseCommand jumpCommand, BaseCommand interactCommand, BaseCommand stopRun)
+        BaseCommand shootCommand;
+        BaseCommand runCommand;
+        BaseCommand jumpCommand;
+        BaseCommand interactCommand;
+        BaseCommand stopRun;
+        BaseCommand aimCommand;
+        public CommandController(BaseCommand shootCommand, BaseCommand runCommand, BaseCommand jumpCommand, BaseCommand interactCommand, BaseCommand stopRun, BaseCommand aimCommand)
         {
-            this._shootCommand = shootCommand;
-            this._runCommand = runCommand;
-            this._jumpCommand = jumpCommand;
-            this._interactCommand = interactCommand;
-            this._stopRun = stopRun;
+            this.shootCommand = shootCommand;
+            this.runCommand = runCommand;
+            this.jumpCommand = jumpCommand;
+            this.interactCommand = interactCommand;
+            this.stopRun = stopRun;
+            this.aimCommand = aimCommand;
         }
         public void Shoot()
         {
             //Comando que fará o player atirar
-            _shootCommand.Execute();
+            this.shootCommand?.Execute();
         }
         public void Run()
         {
             //Comando que fará o player correr
-            _runCommand.Execute();
+            this.runCommand?.Execute();
         }
         public void Jump()
         {
             //Comando que fará o player pular
-            _jumpCommand.Execute();
+            this.jumpCommand?.Execute();
         }
         public void Interact()
         {
             //Comando que fará o player interagir com um objeto.
-            _interactCommand.Execute();
+            this.interactCommand?.Execute();
         }
         public void StopRun()
         {
-            _stopRun.Execute();
+            this.stopRun?.Execute();
+        }
+        public void AimCommand()
+        {
+            this.aimCommand?.Execute();
         }
     }
 }

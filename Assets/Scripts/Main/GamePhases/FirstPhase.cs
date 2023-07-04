@@ -16,10 +16,7 @@ namespace Main
 
         public void Enter()
         {
-            if (GameController.Instance.isInTestPeriod)
-            {
-                GameController.Instance.ChangeCreationOnPhase(GamePhases.first);
-            }
+            GameController.Instance.ChangeCreationOnPhase(GamePhases.first);
         }
 
         public void Exit()

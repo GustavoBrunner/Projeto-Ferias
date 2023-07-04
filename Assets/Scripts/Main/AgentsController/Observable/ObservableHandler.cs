@@ -7,30 +7,30 @@ using UnityEngine;
 
 public class ObservableHandler 
 {
-    BaseController _observable;
-    IObserver _observer;
+    BaseController observable;
+    IObserver observer;
     IObserver[] _observerArray = new IObserver[5];
     public ObservableHandler(BaseController observable, IObserver observer) 
     {
-        _observable = observable;
+        this.observable = observable;
         AddObservers(observer);
         
     }
     public ObservableHandler(BaseController observable, IObserver[] observer) 
     {
-        _observable = observable;
+        this.observable = observable;
         AddObservers(observer);
         Debug.Log($"Added {observer} in {observable.name}");
     }
     public void AddObservers(IObserver observer)
     {
-        this._observer = observer;
-        this._observable.AddObserver(_observer);
-        Debug.Log($"Added {observer} in {_observable}");
+        this.observer = observer;
+        this.observable.AddObserver(this.observer);
+        Debug.Log($"Added {observer} in {observable}");
     }
     public void AddObservers(IObserver[] observer)
     {
         this._observerArray = observer;
-        this._observable.AddObserver(this._observerArray);
+        this.observable.AddObserver(this._observerArray);
     }
 }

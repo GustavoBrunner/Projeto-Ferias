@@ -9,13 +9,13 @@ namespace Main
 {
     public class HudController : MonoBehaviour, IObserver
     {
-        private static HudController instance;
-        public static HudController Instance { get { return instance; } }
-        private TMP_Text _staminaText;
+        private static HudController _instance;
+        public static HudController Instance { get { return _instance; } }
+        private TMP_Text staminaText;
         private void Awake()
         {
             CreateSingleton();
-            _staminaText = GameObject.Find("HUD").GetComponentInChildren<TMP_Text>();
+            staminaText = GameObject.Find("HUD").GetComponentInChildren<TMP_Text>();
         }
         private void Start()
         {
@@ -36,23 +36,23 @@ namespace Main
             }
             if(type == NotificationType.stamina)
             {
-                _staminaText.text = value.ToString();
+                staminaText.text = value.ToString();
             }
         }
         public void GetData()
         {
-            _staminaText.text = PlayerController.Instance.Stamina.ToString();
+            staminaText.text = PlayerController.Instance.Stamina.ToString();
         }
         private void CreateSingleton()
         {
-            if (instance == null)
+            if (_instance == null)
             {
-                instance = this;
+                _instance = this;
             }
             else
             {
                 DestroyImmediate(Instance);
-                instance = this;
+                _instance = this;
             }
         }
     }

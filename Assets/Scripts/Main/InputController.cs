@@ -19,12 +19,13 @@ namespace Main
         /// Também uma instância do player, para poder passar a função dele para o input
         /// </summary>
         
-        BaseCommand _shootCommand;
-        BaseCommand _runCommand;
-        BaseCommand _jumpCommand;
-        BaseCommand _interactCommand;
-        BaseCommand _stopRun;
-        CommandController _commandController;
+        BaseCommand shootCommand;
+        BaseCommand runCommand;
+        BaseCommand jumpCommand;
+        BaseCommand interactCommand;
+        BaseCommand stopRun;
+        BaseCommand aimCommand;
+        CommandController commandController;
 
         private static InputController _instance;
         public static InputController Instance { get { return _instance; } }
@@ -36,25 +37,28 @@ namespace Main
         private void Update()
         {
             if(Input.GetKeyDown(KeyCode.Mouse0))
-                _commandController?.Shoot();
+                commandController?.Shoot();
             if (Input.GetKeyDown(KeyCode.E))
-                _commandController?.Interact();
+                commandController?.Interact();
             if (Input.GetKeyDown(KeyCode.LeftShift))
-                _commandController?.Run();
+                commandController?.Run();
             if(Input.GetKeyDown(KeyCode.Space))
-                _commandController?.Jump();
+                commandController?.Jump();
             if(Input.GetKeyUp(KeyCode.LeftShift))
-                _commandController?.StopRun();
+                commandController?.StopRun();
+            if (Input.GetKeyDown(KeyCode.Mouse1))
+                commandController?.AimCommand();
 
         }
         public void StartCommands()
         {
-            _shootCommand = new ShootCommand("Atirar", PlayerController.Instance.Shoot);
-            _runCommand = new RunCommand("Correr", PlayerController.Instance.Run, PlayerController.Instance.StopRun);
-            _jumpCommand = new JumpCommand("Pular", PlayerController.Instance.Jump);
-            _interactCommand = new InteractCommand("Interação", PlayerController.Instance.Interact);
-            _stopRun = new StopRunCommand("PararCorrida", PlayerController.Instance.StopRun);
-            _commandController = new CommandController(_shootCommand, _runCommand, _jumpCommand, _interactCommand, _stopRun);
+            shootCommand = new ShootCommand("Atirar", PlayerController.Instance.Shoot);
+            runCommand = new RunCommand("Correr", PlayerController.Instance.Run, PlayerController.Instance.StopRun);
+            jumpCommand = new JumpCommand("Pular", PlayerController.Instance.Jump);
+            interactCommand = new InteractCommand("Interação", PlayerController.Instance.Interact);
+            stopRun = new StopRunCommand("PararCorrida", PlayerController.Instance.StopRun);
+            aimCommand = new AimCommand("Mirar", PlayerController.Instance.Aim);
+            commandController = new CommandController(shootCommand, runCommand, jumpCommand, interactCommand, stopRun, aimCommand);
         }
     }
 }

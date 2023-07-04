@@ -9,7 +9,7 @@ namespace Main.FSM
         /// Armazenamos as fases que o jogo terá dentro de um dicionário de fases, 
         /// onde passaremos de parâmetros um gamephase e a fase em si, para ser acessado pela interface.
         /// </summary>
-        public Dictionary<GamePhases, IPhase> phases = new Dictionary<GamePhases, IPhase>();
+        public Dictionary<GamePhases, IPhase> Phases = new Dictionary<GamePhases, IPhase>();
         /// <summary>
         /// referência da interface para que possamos acessar suas informações
         /// </summary>
@@ -24,7 +24,7 @@ namespace Main.FSM
         /// <param name="phase">Phase que será passada para ser adicionada</param>
         public void AddPhases(IPhase phase)
         {
-            phases.Add(phase.GamePhase, phase);
+            Phases.Add(phase.GamePhase, phase);
         }
         /// <summary>
         /// Método para alterar a fase atual. Nossa FSM de fases só irá para frente, não voltará estados
@@ -32,7 +32,7 @@ namespace Main.FSM
         /// <param name="gPhase">Nome da phase que será a próxima</param>
         public void ChangePhase(GamePhases gPhase)
         {
-            var gphase = phases[gPhase];
+            var gphase = Phases[gPhase];
             NextPhase = gphase;
         }
         /// <summary>
@@ -41,7 +41,7 @@ namespace Main.FSM
         /// <param name="gPhase">enum passado para que a phase seja achada dentro do dicionário</param>
         public void StartFSM(GamePhases gPhase)
         {
-            var phase = phases[gPhase];
+            var phase = Phases[gPhase];
             StartFSM(phase);
         }
         /// <summary>
