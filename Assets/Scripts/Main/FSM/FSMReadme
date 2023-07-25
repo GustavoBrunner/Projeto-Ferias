@@ -1,0 +1,3 @@
+  A primeira tentativa de fazer um sistema que mudaria dinamicamente uma fase, de acordo com a progressão do personagem foi usando uma finit state machine. Não deu certo não. A ideia seria que ela seria alimentada
+com informações através do game controller, que verificaria objetos que o player pegaria, etc, e através disso, alteraria coisas na fase, adicionaria inimigos, adicionaria objetos, etc. E, ela iniciaria de acordo com onde
+o jogador quisesse, se estivesse em período de testes, então poderia iniciar na primeira, ou última fase do jogo, e ela geraria tudo necessário pra isso. 
