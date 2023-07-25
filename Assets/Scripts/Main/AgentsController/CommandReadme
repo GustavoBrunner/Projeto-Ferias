@@ -1,0 +1,4 @@
+ Uso do command design pattern, com objetivo de possibilitar, através de um input controller, a troca de inputs, de acordo com a necessidade do jogador. Basicamente temos classes, em que cada uma representa um comando,
+herdando de uma classe base abstrata, e um método executar, também abstrato. Essas classes receberão uma action, que será um método do player, que será executado quando necessário. 
+  Todos essas classes são criadas em uma outra classe, que será o controlador dos comandos. Esse controlador pode ser instanciado em algum controlador de inputs, que questionará o jogador sobre quais botões ele usará para
+cada ação, e alterar ali dentro. 
