@@ -1,0 +1,4 @@
+  Design pattern que editei um pouco o funcionamento dele. Basicamente esse padrão possui uma classe base, e uma interface, cujo a classe base é o objeto observado, e a interface é o observador. Originalmente, na maneira que
+aprendi, esse padrão não é feito com generics, o que deixou as coisas meio engessadas, então alterei. Fiz um enum dos tipos de notificações possíveis, e um tipo genérico, que pode ser qualquer coisa. Então se, na lista de 
+observadores que o player estiver, possuir por exemplo a barra de vida, e o dano, ambos que observam um tipo float, se torna possível, através do tipo de notificação especificar o que estamos passando naquele instante. 
+  Algo mais reaproveitável e relativamente simples.

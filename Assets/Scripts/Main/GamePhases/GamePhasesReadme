@@ -1,0 +1,1 @@
+as fases do jogo seriam usadas em conjunto com a finit state machine, e cada um delas teria a responsabilidade de carregar as cenas que complementariam a fase, de acordo com a etapa em que o jogo está.
