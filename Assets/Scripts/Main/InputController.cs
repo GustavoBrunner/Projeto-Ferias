@@ -46,8 +46,8 @@ namespace Main
                 commandController?.Jump();
             if(Input.GetKeyUp(KeyCode.LeftShift))
                 commandController?.StopRun();
-            if (Input.GetKeyDown(KeyCode.Mouse1))
-                commandController?.AimCommand();
+            //if (Input.GetKeyDown(KeyCode.Mouse1))
+            //    commandController?.AimCommand();
 
         }
         public void StartCommands()
@@ -57,7 +57,7 @@ namespace Main
             jumpCommand = new JumpCommand("Pular", PlayerController.Instance.Jump);
             interactCommand = new InteractCommand("Interação", PlayerController.Instance.Interact);
             stopRun = new StopRunCommand("PararCorrida", PlayerController.Instance.StopRun);
-            aimCommand = new AimCommand("Mirar", PlayerController.Instance.Aim);
+            //aimCommand = new AimCommand("Mirar", PlayerController.Instance.Aim);
             commandController = new CommandController(shootCommand, runCommand, jumpCommand, interactCommand, stopRun, aimCommand);
         }
     }

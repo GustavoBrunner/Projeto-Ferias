@@ -9,6 +9,7 @@ using Main.FSM;
 using System.Linq;
 using System;
 using Main.DTO;
+using System.Threading.Tasks;
 
 namespace Main
 {
@@ -40,8 +41,6 @@ namespace Main
         }
         private void Start()
         {
-            if (!isInTestPeriod)
-                TurnFSMon(GamePhases.first);
         }
         void Update()
         {
@@ -51,7 +50,6 @@ namespace Main
                 if(Input.GetKeyDown(KeyCode.F1))
                 {
                     TurnFSMon(GamePhases.first);
-                
                     Debug.Log("Criando mundo");
                 }
                 if(Input.GetKeyDown(KeyCode.Keypad1))
@@ -66,6 +64,10 @@ namespace Main
                 if(Input.GetKeyDown(KeyCode.Alpha1))
                 {
                     LoadScene(GamePhases.first);
+                }
+                if (Input.GetKeyDown(KeyCode.Keypad0))
+                {
+                    LoadScene(GamePhases.test);
                 }
             }
         }
@@ -98,36 +100,39 @@ namespace Main
                 Debug.LogError(e.Message);
             }
         }
-        //Create the base of the game based on the actual game phase. Testing purpose.
-        public void ChangeCreationOnPhase(GamePhases phase)
+
+        //usar async num método nos permite que as coisas sejam executadas de maneira assíncronas
+        //e também que possamos esperar até que algo seja executado, para podermos continuar as execuções posteriores
+        public async void ChangeCreationOnPhase(GamePhases phase)
         {
-            //if(isInTestPeriod)
-            //{
-                switch(phase)
-                {
-                    case GamePhases.none:
-                        Debug.Break();
-                        break;
-                    case GamePhases.first:
-                        //CreateBaseWorld();
-                        Debug.Log("Creating first phase");
-                        worldDTO = UpdateDTO(GamePhases.first);
-                        CreatePlayer();
-                        PlayerController.Instance.FirstPhasePlayer(worldDTO);
-                        HudController.Instance.GetData();
-                        InputController.Instance.StartCommands();
-                        break;
-                    case GamePhases.second:
+            switch (phase)
+            {
+                case GamePhases.none:
+                    Debug.Break();
+                    break;
+                case GamePhases.first:
+                    //CreateBaseWorld();
+                    Debug.Log("Creating first phase");
+                    worldDTO = UpdateDTO(GamePhases.second);
+                    Debug.Log("DTO updated");
+                    Debug.Log("Player Created");
+                    CreatePlayer();
+                    Debug.Log("Player data updated");
+                    PlayerController.Instance.FirstPhasePlayer(worldDTO);
+                    Debug.Log("Data collected");
+                    HudController.Instance.GetData();
+                    InputController.Instance.StartCommands();
+                    break;
+                case GamePhases.second:
 
-                        break;
-                    case GamePhases.third:
+                    break;
+                case GamePhases.third:
 
-                        break;
+                    break;
 
-                    default:
-                        break;
-                }
-            //}
+                default:
+                    break;
+            }
         }
         //cria o singleton do game controller
         private void CreateSingleton()
@@ -213,14 +218,17 @@ namespace Main
             {
                 case GamePhases.none:
                     break;
+                case GamePhases.test:
+                    SceneManager.LoadSceneAsync("TestScreen");
+                    break;
                 case GamePhases.first:
-                    SceneManager.LoadScene("FirstPhase");
+                    SceneManager.LoadSceneAsync("FirstPhase");
                     break;
                 case GamePhases.second:
-                    SceneManager.LoadScene("SecondPhase");
+                    SceneManager.LoadSceneAsync("SecondPhase");
                     break;
                 case GamePhases.third:
-                    SceneManager.LoadScene("ThirdPhase");
+                    SceneManager.LoadSceneAsync("ThirdPhase");
                     break;
                 default:
                     break;

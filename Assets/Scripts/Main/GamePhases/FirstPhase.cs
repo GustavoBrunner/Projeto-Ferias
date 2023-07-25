@@ -17,6 +17,7 @@ namespace Main
         public void Enter()
         {
             GameController.Instance.ChangeCreationOnPhase(GamePhases.first);
+            Debug.Log("Entering First Phase");
         }
 
         public void Exit()
@@ -26,7 +27,7 @@ namespace Main
 
         public void Update(float deltaTime)
         {
-            Debug.Log("First Phase");
+            
         }
     }
 }

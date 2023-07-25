@@ -20,17 +20,17 @@ namespace Main
             private WorldCreationDTO firstDto;
             public const float MIN_STAMINA = 0f;
             public const float MAX_STAMINA = 20f;
-            private float aimSpeed;
-            private bool canAim;
-            private bool isAim;
+            //private float aimSpeed;
+            //private bool canAim;
+            //private bool isAim;
             protected override void Awake()
             {
                 CreateSingleton();
                 base.Awake();
                 //FirstPhasePlayer();
                 firstDto = Resources.Load<WorldCreationDTO>("DTOs/PlayerDTO");
-                canAim = true;
-                isAim = false;
+                //canAim = true;
+                //isAim = false;
             }
             protected override void Start()
             {
@@ -44,11 +44,6 @@ namespace Main
                     Move();
                 }
                 SubStamina();
-                if(Input.GetKeyUp(KeyCode.Mouse1))
-                {
-
-                }
-                ChangePlayerRotation();
             }
             private void CreateSingleton()
             {
@@ -69,25 +64,13 @@ namespace Main
             {
                 Debug.Log("pew pew pew Player atirando");
             }
-            public void Aim()
-            {
-                if(canAim)
-                {
-                    Debug.Log("Player aiming");
-                    this.Agent.speed = aimSpeed;
-                    isAim = true;
-                }
-            }
             public void Run()
             {
-                if(!isAim)
-                {
-                    isRunning = true;
-                    canAim = false;
-                    Debug.Log("Player Running");
-                    if (Stamina > MIN_STAMINA)
-                        Agent.speed = 10f;
-                }
+                isRunning = true;
+                Debug.Log("Player Running");
+                if (Stamina > MIN_STAMINA)
+                    Agent.speed = 10f;
+                
             }
             private void SubStamina()
             {
@@ -103,7 +86,6 @@ namespace Main
             public void StopRun()
             {
                 isRunning = false;
-                canAim = true;
                 Agent.speed = 5f;
             }
             public void Jump()
@@ -161,19 +143,7 @@ namespace Main
                     this.transform.position = dto.Position;
                     this.Agent.speed = dto.Speed;
                     this.Stamina = dto.Stamina;
-                    this.aimSpeed = dto.AimSpeed;
                     Debug.Log("Criando player");
-                }
-            }
-            private void ChangePlayerRotation()
-            {
-                
-                if (isAim)
-                {
-                    
-                else
-                {
-
                 }
             }
         }

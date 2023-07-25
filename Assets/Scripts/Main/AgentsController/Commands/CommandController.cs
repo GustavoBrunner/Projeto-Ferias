@@ -7,7 +7,7 @@ namespace Main.AgentsController.Commands
     /// </summary>
     /// 
     
-    public class CommandController : MonoBehaviour
+    public class CommandController
     {
         
         BaseCommand shootCommand;
